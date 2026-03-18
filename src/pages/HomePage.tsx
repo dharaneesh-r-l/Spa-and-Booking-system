@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Hero from '@/components/spa/Hero';
-import Services from '@/components/spa/Services';
-import BookingForm from '@/components/spa/BookingForm';
+import BookingWizard from '@/components/booking/BookingWizard';
 import Footer from '@/components/spa/Footer';
+import { initializeSampleData } from '@/data/sampleData';
 
 const HomePage: React.FC = () => {
+  useEffect(() => {
+    // Initialize sample data on component mount
+    initializeSampleData();
+  }, []);
+
   const scrollToBooking = () => {
     const bookingSection = document.getElementById('booking');
     if (bookingSection) {
@@ -15,8 +20,23 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen">
       <Hero onBookNow={scrollToBooking} />
-      <Services />
-      <BookingForm />
+      
+      {/* Booking Section */}
+      <section id="booking" className="py-16 md:py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              Book Your <span className="gradient-text">Appointment</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Select your city, choose a salon, pick a service, and book your slot
+            </p>
+          </div>
+          
+          <BookingWizard />
+        </div>
+      </section>
+      
       <Footer />
     </div>
   );

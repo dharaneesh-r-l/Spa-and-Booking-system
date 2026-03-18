@@ -1,4 +1,7 @@
 import type { Appointment, BookingFormData } from '@/types/index';
+import { getCityById } from './cityService';
+import { getSalonById } from './salonService';
+import { getServiceById } from './serviceService';
 
 const STORAGE_KEY = 'spa_appointments';
 
@@ -13,29 +16,50 @@ export const getAllAppointments = (): Appointment[] => {
   }
 };
 
-// Check if a time slot is already booked
-export const isTimeSlotAvailable = (date: string, time: string): boolean => {
+// Check if a time slot is already booked for a specific salon
+export const isTimeSlotAvailable = (salonId: string, date: string, time: string): boolean => {
   const appointments = getAllAppointments();
   return !appointments.some(
-    (apt) => apt.date === date && apt.time === time
+    (apt) => apt.salonId === salonId && apt.date === date && apt.time === time
   );
 };
 
 // Create a new appointment
 export const createAppointment = (formData: BookingFormData): { success: boolean; message: string; appointment?: Appointment } => {
   try {
-    // Check if time slot is available
-    if (!isTimeSlotAvailable(formData.date, formData.time)) {
+    // Check if time slot is available for this salon
+    if (!isTimeSlotAvailable(formData.salonId, formData.date, formData.time)) {
       return {
         success: false,
-        message: 'This time slot is already booked. Please choose another time.'
+        message: 'This time slot is already booked at this salon. Please choose another time.'
+      };
+    }
+
+    // Get related data
+    const city = getCityById(formData.cityId);
+    const salon = getSalonById(formData.salonId);
+    const service = getServiceById(formData.serviceId);
+
+    if (!city || !salon || !service) {
+      return {
+        success: false,
+        message: 'Invalid booking data. Please try again.'
       };
     }
 
     // Create new appointment
     const newAppointment: Appointment = {
       id: crypto.randomUUID(),
-      ...formData,
+      name: formData.name,
+      email: formData.email,
+      cityId: formData.cityId,
+      cityName: city.name,
+      salonId: formData.salonId,
+      salonName: salon.name,
+      serviceId: formData.serviceId,
+      serviceName: service.serviceName,
+      date: formData.date,
+      time: formData.time,
       createdAt: new Date().toISOString()
     };
 
@@ -46,7 +70,7 @@ export const createAppointment = (formData: BookingFormData): { success: boolean
 
     return {
       success: true,
-      message: 'Appointment booked successfully! A confirmation email has been sent.',
+      message: `Appointment booked successfully at ${salon.name}! A confirmation email has been sent to ${formData.email}.`,
       appointment: newAppointment
     };
   } catch (error) {
@@ -71,8 +95,21 @@ export const deleteAppointment = (id: string): boolean => {
   }
 };
 
-// Get appointments by date (for filtering)
+// Get appointments by city
+export const getAppointmentsByCity = (cityId: string): Appointment[] => {
+  const appointments = getAllAppointments();
+  return appointments.filter((apt) => apt.cityId === cityId);
+};
+
+// Get appointments by salon
+export const getAppointmentsBySalon = (salonId: string): Appointment[] => {
+  const appointments = getAllAppointments();
+  return appointments.filter((apt) => apt.salonId === salonId);
+};
+
+// Get appointments by date
 export const getAppointmentsByDate = (date: string): Appointment[] => {
   const appointments = getAllAppointments();
   return appointments.filter((apt) => apt.date === date);
 };
+
