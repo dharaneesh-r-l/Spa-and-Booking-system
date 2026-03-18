@@ -1,17 +1,67 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface HeroProps {
   onBookNow: () => void;
 }
 
 const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
+  const { isAuthenticated, user, isAdmin } = useAuth();
+
   return (
     <section className="relative min-h-[600px] md:min-h-[700px] flex items-center justify-center bg-gradient-to-br from-beige via-background to-secondary overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-64 h-64 bg-gold rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary rounded-full blur-3xl" />
+      </div>
+
+      {/* Navigation Bar */}
+      <div className="absolute top-0 left-0 right-0 z-20">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="text-2xl font-bold gradient-text">
+              Spa & Salon
+            </Link>
+            
+            <div className="flex items-center gap-4">
+              {isAuthenticated ? (
+                <>
+                  <span className="text-sm text-muted-foreground hidden md:block">
+                    Welcome, <span className="font-medium text-foreground">{user?.name}</span>
+                  </span>
+                  <Link to="/my-bookings">
+                    <Button variant="outline" className="border-gold hover:bg-gold/10" asChild>
+                      <span>My Bookings</span>
+                    </Button>
+                  </Link>
+                  {isAdmin && (
+                    <Link to="/admin">
+                      <Button variant="outline" className="border-gold hover:bg-gold/10" asChild>
+                        <span>Admin</span>
+                      </Button>
+                    </Link>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button variant="outline" className="border-gold hover:bg-gold/10" asChild>
+                      <span>Login</span>
+                    </Button>
+                  </Link>
+                  <Link to="/register">
+                    <Button className="bg-gold hover:bg-gold/90 text-gold-foreground" asChild>
+                      <span>Register</span>
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">

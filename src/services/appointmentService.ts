@@ -2,6 +2,7 @@ import type { Appointment, BookingFormData } from '@/types/index';
 import { getCityById } from './cityService';
 import { getSalonById } from './salonService';
 import { getServiceById } from './serviceService';
+import { getCurrentUser } from './authService';
 
 const STORAGE_KEY = 'spa_appointments';
 
@@ -27,6 +28,15 @@ export const isTimeSlotAvailable = (salonId: string, date: string, time: string)
 // Create a new appointment
 export const createAppointment = (formData: BookingFormData): { success: boolean; message: string; appointment?: Appointment } => {
   try {
+    // Get current user
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      return {
+        success: false,
+        message: 'You must be logged in to book an appointment.'
+      };
+    }
+
     // Check if time slot is available for this salon
     if (!isTimeSlotAvailable(formData.salonId, formData.date, formData.time)) {
       return {
@@ -50,8 +60,9 @@ export const createAppointment = (formData: BookingFormData): { success: boolean
     // Create new appointment
     const newAppointment: Appointment = {
       id: crypto.randomUUID(),
-      name: formData.name,
-      email: formData.email,
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userEmail: currentUser.email,
       cityId: formData.cityId,
       cityName: city.name,
       salonId: formData.salonId,
@@ -70,7 +81,7 @@ export const createAppointment = (formData: BookingFormData): { success: boolean
 
     return {
       success: true,
-      message: `Appointment booked successfully at ${salon.name}! A confirmation email has been sent to ${formData.email}.`,
+      message: `Appointment booked successfully at ${salon.name}! A confirmation email has been sent to ${currentUser.email}.`,
       appointment: newAppointment
     };
   } catch (error) {
@@ -82,10 +93,25 @@ export const createAppointment = (formData: BookingFormData): { success: boolean
   }
 };
 
-// Delete an appointment (for admin)
-export const deleteAppointment = (id: string): boolean => {
+// Get appointments by user ID
+export const getAppointmentsByUser = (userId: string): Appointment[] => {
+  const appointments = getAllAppointments();
+  return appointments.filter((apt) => apt.userId === userId);
+};
+
+// Delete an appointment (for admin or user's own appointment)
+export const deleteAppointment = (id: string, userId?: string): boolean => {
   try {
     const appointments = getAllAppointments();
+    
+    // If userId provided, check if appointment belongs to user
+    if (userId) {
+      const appointment = appointments.find(apt => apt.id === id);
+      if (appointment && appointment.userId !== userId) {
+        return false; // Not authorized
+      }
+    }
+    
     const filtered = appointments.filter((apt) => apt.id !== id);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
     return true;

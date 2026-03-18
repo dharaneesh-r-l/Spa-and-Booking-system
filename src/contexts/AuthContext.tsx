@@ -1,117 +1,75 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { supabase } from '@/db/supabase';
-import type { User } from '@supabase/supabase-js';
-import type { Profile } from '@/types/types';
-import { toast } from 'sonner';
+import { getCurrentUser, loginUser, loginAdmin, registerUser, logout as logoutService, isAdmin as checkIsAdmin } from '@/services/authService';
+import type { User } from '@/types/index';
 
-export async function getProfile(userId: string): Promise<Profile | null> {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .maybeSingle();
-
-  if (error) {
-    console.error('获取用户信息失败:', error);
-    return null;
-  }
-  return data;
-}
 interface AuthContextType {
   user: User | null;
-  profile: Profile | null;
   loading: boolean;
-  signInWithUsername: (username: string, password: string) => Promise<{ error: Error | null }>;
-  signUpWithUsername: (username: string, password: string) => Promise<{ error: Error | null }>;
-  signOut: () => Promise<void>;
-  refreshProfile: () => Promise<void>;
+  isAuthenticated: boolean;
+  isAdmin: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
+  adminLogin: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
+  register: (name: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const refreshProfile = async () => {
-    if (!user) {
-      setProfile(null);
-      return;
-    }
-
-    const profileData = await getProfile(user.id);
-    setProfile(profileData);
-  };
-
   useEffect(() => {
-    supabase
-      .auth
-      .getSession()
-      .then(({ data: { session } }) => {
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          getProfile(session.user.id).then(setProfile);
-        }
-      })
-      .catch(error => {
-        toast.error(`获取用户信息失败: ${error.message}`);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-
-    // In this function, do NOT use any await calls. Use `.then()` instead to avoid deadlocks.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        getProfile(session.user.id).then(setProfile);
-      } else {
-        setProfile(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    // Check for existing session on mount
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+    setLoading(false);
   }, []);
 
-  const signInWithUsername = async (username: string, password: string) => {
-    try {
-      const email = `${username}@miaoda.com`;
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      return { error: null };
-    } catch (error) {
-      return { error: error as Error };
+  const login = async (email: string, password: string) => {
+    const result = await loginUser(email, password);
+    if (result.success && result.user) {
+      setUser(result.user);
     }
+    return { success: result.success, message: result.message };
   };
 
-  const signUpWithUsername = async (username: string, password: string) => {
-    try {
-      const email = `${username}@miaoda.com`;
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      return { error: null };
-    } catch (error) {
-      return { error: error as Error };
+  const adminLogin = async (email: string, password: string) => {
+    const result = await loginAdmin(email, password);
+    if (result.success && result.user) {
+      setUser(result.user);
     }
+    return { success: result.success, message: result.message };
   };
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
+  const register = async (name: string, email: string, password: string) => {
+    const result = await registerUser(name, email, password);
+    if (result.success && result.user) {
+      // Auto-login after registration
+      const loginResult = await loginUser(email, password);
+      if (loginResult.success && loginResult.user) {
+        setUser(loginResult.user);
+      }
+    }
+    return { success: result.success, message: result.message };
+  };
+
+  const logout = () => {
+    logoutService();
     setUser(null);
-    setProfile(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signInWithUsername, signUpWithUsername, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      isAuthenticated: user !== null,
+      isAdmin: user?.role === 'admin' || checkIsAdmin(),
+      login,
+      adminLogin,
+      register,
+      logout
+    }}>
       {children}
     </AuthContext.Provider>
   );

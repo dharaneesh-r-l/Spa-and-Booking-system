@@ -51,8 +51,8 @@ const AdminTable: React.FC = () => {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(apt =>
-        apt.name.toLowerCase().includes(query) ||
-        apt.email.toLowerCase().includes(query) ||
+        apt.userName.toLowerCase().includes(query) ||
+        apt.userEmail.toLowerCase().includes(query) ||
         apt.salonName.toLowerCase().includes(query) ||
         apt.serviceName.toLowerCase().includes(query)
       );
@@ -144,7 +144,7 @@ const AdminTable: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
+                  <TableHead>User</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>City</TableHead>
                   <TableHead>Salon</TableHead>
@@ -158,8 +158,8 @@ const AdminTable: React.FC = () => {
               <TableBody>
                 {filteredAppointments.map((appointment) => (
                   <TableRow key={appointment.id}>
-                    <TableCell className="font-medium">{appointment.name}</TableCell>
-                    <TableCell>{appointment.email}</TableCell>
+                    <TableCell className="font-medium">{appointment.userName}</TableCell>
+                    <TableCell>{appointment.userEmail}</TableCell>
                     <TableCell>{appointment.cityName}</TableCell>
                     <TableCell>{appointment.salonName}</TableCell>
                     <TableCell>{appointment.serviceName}</TableCell>

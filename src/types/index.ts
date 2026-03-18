@@ -5,6 +5,16 @@ export interface Option {
   withCount?: boolean;
 }
 
+// User type definition
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string; // hashed
+  role: 'user' | 'admin';
+  createdAt: string;
+}
+
 // City type definition
 export interface City {
   id: string;
@@ -35,8 +45,9 @@ export interface Service {
 // Appointment type definition
 export interface Appointment {
   id: string;
-  name: string;
-  email: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
   cityId: string;
   cityName: string;
   salonId: string;
@@ -50,8 +61,6 @@ export interface Appointment {
 
 // Booking form data
 export interface BookingFormData {
-  name: string;
-  email: string;
   cityId: string;
   salonId: string;
   serviceId: string;

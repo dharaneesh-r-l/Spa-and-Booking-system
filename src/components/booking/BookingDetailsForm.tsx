@@ -6,19 +6,18 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/contexts/AuthContext';
 import type { City, Salon, Service } from '@/types/index';
 
 interface BookingDetailsFormProps {
   city: City;
   salon: Salon;
   service: Service;
-  onSubmit: (data: { name: string; email: string; date: string; time: string }) => void;
+  onSubmit: (data: { date: string; time: string }) => void;
   isSubmitting: boolean;
 }
 
 interface FormData {
-  name: string;
-  email: string;
   date: string;
   time: string;
 }
@@ -30,10 +29,10 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({
   onSubmit,
   isSubmitting
 }) => {
+  const { user } = useAuth();
+  
   const form = useForm<FormData>({
     defaultValues: {
-      name: '',
-      email: '',
       date: '',
       time: ''
     }
@@ -74,10 +73,21 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({
             Complete Your <span className="gradient-text">Booking</span>
           </CardTitle>
           <CardDescription>
-            Fill in your details to confirm the appointment
+            Select your preferred date and time
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* User Info Display */}
+          {user && (
+            <div className="bg-secondary/30 rounded-lg p-4">
+              <h3 className="font-bold text-sm text-muted-foreground mb-2">Booking For:</h3>
+              <div className="space-y-1">
+                <p className="font-medium">{user.name}</p>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
+              </div>
+            </div>
+          )}
+
           {/* Booking Summary */}
           <div className="bg-secondary/30 rounded-lg p-4 space-y-2">
             <h3 className="font-bold text-lg mb-3">Booking Summary</h3>
@@ -112,44 +122,6 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({
           {/* Booking Form */}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-              {/* Name field */}
-              <FormField
-                control={form.control}
-                name="name"
-                rules={{ required: 'Name is required' }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Email field */}
-              <FormField
-                control={form.control}
-                name="email"
-                rules={{
-                  required: 'Email is required',
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Invalid email address'
-                  }
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="your.email@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               {/* Date picker */}
               <FormField
                 control={form.control}

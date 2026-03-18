@@ -1,10 +1,17 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import AdminTable from '@/components/admin/AdminTable';
 
 const AdminPage: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin-login');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -20,13 +27,21 @@ const AdminPage: React.FC = () => {
                 Manage all spa and salon appointments
               </p>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => navigate('/')}
-              className="border-gold hover:bg-gold/10"
-            >
-              ← Back to Home
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="border-gold hover:bg-gold/10"
+              >
+                ← Back to Home
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>

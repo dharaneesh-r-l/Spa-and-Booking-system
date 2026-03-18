@@ -33,7 +33,7 @@ const BookingWizard: React.FC = () => {
     setStep(4);
   };
 
-  const handleBookingSubmit = async (data: { name: string; email: string; date: string; time: string }) => {
+  const handleBookingSubmit = async (data: { date: string; time: string }) => {
     if (!selectedCity || !selectedSalon || !selectedService) {
       toast.error('Please complete all booking steps');
       return;
@@ -43,8 +43,6 @@ const BookingWizard: React.FC = () => {
 
     try {
       const bookingData: BookingFormData = {
-        name: data.name,
-        email: data.email,
         cityId: selectedCity.id,
         salonId: selectedSalon.id,
         serviceId: selectedService.id,

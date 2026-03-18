@@ -3,11 +3,13 @@ import Hero from '@/components/spa/Hero';
 import BookingWizard from '@/components/booking/BookingWizard';
 import Footer from '@/components/spa/Footer';
 import { initializeSampleData } from '@/data/sampleData';
+import { initializeAdminUser } from '@/services/authService';
 
 const HomePage: React.FC = () => {
   useEffect(() => {
-    // Initialize sample data on component mount
+    // Initialize sample data and admin user on component mount
     initializeSampleData();
+    initializeAdminUser();
   }, []);
 
   const scrollToBooking = () => {
