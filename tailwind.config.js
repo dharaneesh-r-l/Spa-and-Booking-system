@@ -84,6 +84,14 @@ export default {
                     '3': 'hsl(var(--chart-3))',
                     '4': 'hsl(var(--chart-4))',
                     '5': 'hsl(var(--chart-5))'
+                },
+                gold: {
+                    DEFAULT: 'hsl(var(--gold))',
+                    foreground: 'hsl(var(--gold-foreground))'
+                },
+                beige: {
+                    DEFAULT: 'hsl(var(--beige))',
+                    foreground: 'hsl(var(--beige-foreground))'
                 }
             },
             borderRadius: {
