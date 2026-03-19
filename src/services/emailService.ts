@@ -1,5 +1,6 @@
 // Email notification service
 // This service handles sending booking confirmation emails
+import emailjs from '@emailjs/browser';
 
 interface EmailData {
   userName: string;
@@ -220,26 +221,20 @@ export const sendBookingConfirmationEmail = async (data: EmailData): Promise<{ s
     const htmlContent = generateEmailHTML(data);
     const textContent = generateEmailText(data);
 
-    // Log email content for demonstration
-    console.log('=== EMAIL NOTIFICATION ===');
-    console.log('To:', data.userEmail);
-    console.log('Subject: Booking Confirmation - Spa & Salon');
-    console.log('HTML Content:', htmlContent);
-    console.log('Text Content:', textContent);
-    console.log('========================');
+    // Fetch your keys from environment variables
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-    // In a real implementation, you would send the email here
-    // Example with EmailJS:
-    /*
+    // Send using EmailJS
     const response = await emailjs.send(
-      'YOUR_SERVICE_ID',
-      'YOUR_TEMPLATE_ID',
+      serviceId,
+      templateId,
       {
         to_email: data.userEmail,
         to_name: data.userName,
-        subject: 'Booking Confirmation - Spa & Salon',
-        html_content: htmlContent,
-        text_content: textContent,
+        subject: `Booking Confirmed: ${data.serviceName} at ${data.salonName}`,
+        html_content: htmlContent, // This sends all your styles/design to the template
         city: data.cityName,
         salon: data.salonName,
         service: data.serviceName,
@@ -247,42 +242,22 @@ export const sendBookingConfirmationEmail = async (data: EmailData): Promise<{ s
         time: data.time,
         price: data.servicePrice
       },
-      'YOUR_PUBLIC_KEY'
+      publicKey
     );
-    */
 
-    // Example with SendGrid API:
-    /*
-    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${YOUR_SENDGRID_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        personalizations: [{
-          to: [{ email: data.userEmail, name: data.userName }]
-        }],
-        from: { email: 'noreply@spa-salon.com', name: 'Spa & Salon' },
-        subject: 'Booking Confirmation - Spa & Salon',
-        content: [
-          { type: 'text/plain', value: textContent },
-          { type: 'text/html', value: htmlContent }
-        ]
-      })
-    });
-    */
-
-    // For demo purposes, we'll simulate success
-    return {
-      success: true,
-      message: 'Confirmation email sent successfully! (Demo mode - check console for email content)'
-    };
+    if (response.status === 200) {
+      return {
+        success: true,
+        message: 'Confirmation email sent successfully!'
+      };
+    } else {
+      throw new Error('EmailJS returned non-200 status');
+    }
   } catch (error) {
     console.error('Email sending error:', error);
     return {
       success: false,
-      message: 'Failed to send confirmation email'
+      message: 'Failed to send confirmation email. Please check your EmailJS configuration.'
     };
   }
 };

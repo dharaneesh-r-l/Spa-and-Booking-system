@@ -12,8 +12,13 @@ import type { Appointment } from '@/types/index';
 const MyBookingsPage: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const loadAppointments = () => {
     if (!user) {
@@ -98,13 +103,21 @@ const MyBookingsPage: React.FC = () => {
                 View and manage your appointments
               </p>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => navigate('/')}
-              className="border-gold hover:bg-gold/10"
-            >
-              ← Back to Home
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="border-gold hover:bg-gold/10"
+              >
+                ← Back to Home
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>

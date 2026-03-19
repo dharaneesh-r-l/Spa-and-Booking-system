@@ -8,7 +8,7 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
-  const { isAuthenticated, user, isAdmin } = useAuth();
+  const { isAuthenticated, user, isAdmin, logout } = useAuth();
 
   return (
     <section className="relative min-h-[600px] md:min-h-[700px] flex items-center justify-center bg-gradient-to-br from-beige via-background to-secondary overflow-hidden">
@@ -44,6 +44,13 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
                       </Button>
                     </Link>
                   )}
+                  <Button 
+                    variant="outline" 
+                    className="border-gold hover:bg-gold/10" 
+                    onClick={() => logout()}
+                  >
+                    Logout
+                  </Button>
                 </>
               ) : (
                 <>

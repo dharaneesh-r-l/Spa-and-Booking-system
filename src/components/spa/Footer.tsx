@@ -15,17 +15,9 @@ const Footer: React.FC = () => {
             <a href="#" className="hover:text-gold transition-colors">Contact</a>
             <a href="/admin-login" className="hover:text-gold transition-colors">Admin</a>
           </div>
-          
-          {/* Setup Information */}
-          <div className="pt-4 border-t border-background/20 mt-4">
-            <p className="text-xs opacity-60">
-              💻 Running locally? Check README.md for Windows CMD setup instructions
-            </p>
-            <p className="text-xs opacity-60 mt-1">
-              📧 Email notifications enabled - Check browser console for email content
-            </p>
-          </div>
-          
+
+
+
           <p className="text-xs opacity-60 pt-2">
             © 2026 Spa & Salon Booking System. All rights reserved.
           </p>
