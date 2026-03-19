@@ -254,12 +254,35 @@ A full-stack web application for global salon and spa appointment booking with p
 - Run application using: python app.py
 - Application must be executable via Windows Command Prompt
 
-### 4.2 Deliverables
+### 4.2 Quick Run Guide
+- Provide a comprehensive README.md file with step-by-step setup instructions including:
+  - Prerequisites (Python version, required packages)
+  - Installation commands
+  - Database initialization steps
+  - SMTP configuration guide
+  - How to run the application
+  - Default admin credentials
+  - Troubleshooting common issues
+
+### 4.3 Quick Run Batch File
+- Create a run.bat file for Windows users
+- Batch file should:
+  - Check if Python is installed
+  - Install required dependencies automatically (pip install -r requirements.txt)
+  - Initialize database if not exists
+  - Start the Flask application
+  - Open default browser to application URL
+- Provide error handling and user-friendly messages in batch file
+- Include comments in batch file for clarity
+
+### 4.4 Deliverables
 - Complete working code for all files
 - Authentication system fully integrated
 - Error-free application execution
-- Setup documentation
+- Setup documentation (README.md)
 - Windows CMD compatible startup script
+- Quick run batch file (run.bat)
+- requirements.txt file listing all dependencies
 
 ## 5. Other Requirements
 - Application must run without errors on Windows local machine
@@ -269,3 +292,4 @@ A full-stack web application for global salon and spa appointment booking with p
 - Application should behave like a mini version of a global salon booking platform where users can register, login, book any salon from any city, and view their bookings
 - Email integration must trigger only after booking is completed
 - Application must be Windows CMD friendly for local execution
+- Provide clear documentation for easy setup and execution
