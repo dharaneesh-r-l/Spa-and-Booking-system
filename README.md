@@ -1,91 +1,228 @@
-# Welcome to Your Miaoda Project
+# Global Salon & Spa Booking System
 
-## Project Info
+A full-featured spa and salon appointment booking web application with authentication, multi-step booking flow, and admin dashboard.
 
-## Project Directory
+## Features
 
-```
-├── README.md # Documentation
-├── components.json # Component library configuration
-├── index.html # Entry file
-├── package.json # Package management
-├── postcss.config.js # PostCSS configuration
-├── public # Static resources directory
-│   ├── favicon.png # Icon
-│   └── images # Image resources
-├── src # Source code directory
-│   ├── App.tsx # Entry file
-│   ├── components # Components directory
-│   ├── context # Context directory
-│   ├── db # Database configuration directory
-│   ├── hooks # Common hooks directory
-│   ├── index.css # Global styles
-│   ├── layout # Layout directory
-│   ├── lib # Utility library directory
-│   ├── main.tsx # Entry file
-│   ├── routes.tsx # Routing configuration
-│   ├── pages # Pages directory
-│   ├── services # Database interaction directory
-│   ├── types # Type definitions directory
-├── tsconfig.app.json # TypeScript frontend configuration file
-├── tsconfig.json # TypeScript configuration file
-├── tsconfig.node.json # TypeScript Node.js configuration file
-└── vite.config.ts # Vite configuration file
-```
+- 🔐 **User Authentication**: Register, login, and secure session management
+- 🏙️ **City-Based Search**: Search and select from multiple cities
+- 💇 **Salon Discovery**: Browse salons with ratings, locations, and services
+- 📅 **Smart Booking**: Multi-step booking wizard with date/time selection
+- 👤 **User Dashboard**: View and manage your appointments
+- 👨‍💼 **Admin Panel**: Comprehensive dashboard for managing all bookings
+- 📧 **Email Notifications**: Booking confirmation emails (configurable)
+- 🎨 **Luxury UI**: Premium design with beige, gold, and black theme
 
-## Tech Stack
+## Technology Stack
 
-Vite, TypeScript, React, Supabase
+- **Frontend**: React 18 + TypeScript
+- **UI Components**: shadcn/ui
+- **Styling**: Tailwind CSS
+- **Routing**: React Router v6
+- **Forms**: React Hook Form
+- **State Management**: React Context API
+- **Build Tool**: Vite
+- **Data Storage**: localStorage (demo mode)
 
-## Development Guidelines
+## Prerequisites
 
-### How to edit code locally?
+- Node.js (v16 or higher)
+- npm or pnpm package manager
 
-You can choose [VSCode](https://code.visualstudio.com/Download) or any IDE you prefer. The only requirement is to have Node.js and npm installed.
+## Windows Setup Instructions
 
-### Environment Requirements
+### 1. Install Node.js
 
-```
-# Node.js ≥ 20
-# npm ≥ 10
-Example:
-# node -v   # v20.18.3
-# npm -v    # 10.8.2
+Download and install Node.js from [nodejs.org](https://nodejs.org/)
+
+Verify installation in Command Prompt:
+```cmd
+node --version
+npm --version
 ```
 
-### Installing Node.js on Windows
+### 2. Install pnpm (Recommended)
 
-```
-# Step 1: Visit the Node.js official website: https://nodejs.org/, click download. The website will automatically suggest a suitable version (32-bit or 64-bit) for your system.
-# Step 2: Run the installer: Double-click the downloaded installer to run it.
-# Step 3: Complete the installation: Follow the installation wizard to complete the process.
-# Step 4: Verify installation: Open Command Prompt (cmd) or your IDE terminal, and type `node -v` and `npm -v` to check if Node.js and npm are installed correctly.
+```cmd
+npm install -g pnpm
 ```
 
-### Installing Node.js on macOS
+### 3. Clone/Extract Project
 
-```
-# Step 1: Using Homebrew (Recommended method): Open Terminal. Type the command `brew install node` and press Enter. If Homebrew is not installed, you need to install it first by running the following command in Terminal:
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-Alternatively, use the official installer: Visit the Node.js official website. Download the macOS .pkg installer. Open the downloaded .pkg file and follow the prompts to complete the installation.
-# Step 2: Verify installation: Open Command Prompt (cmd) or your IDE terminal, and type `node -v` and `npm -v` to check if Node.js and npm are installed correctly.
+Navigate to the project directory:
+```cmd
+cd path\to\app-acdi0cpanz7l
 ```
 
-### After installation, follow these steps:
+### 4. Install Dependencies
 
-```
-# Step 1: Download the code package
-# Step 2: Extract the code package
-# Step 3: Open the code package with your IDE and navigate into the code directory
-# Step 4: In the IDE terminal, run the command to install dependencies: npm i
-# Step 5: In the IDE terminal, run the command to start the development server: npm run dev -- --host 127.0.0.1
-# Step 6: if step 5 failed, try this command to start the development server: npx vite --host 127.0.0.1
+```cmd
+pnpm install
 ```
 
-### How to develop backend services?
+Or with npm:
+```cmd
+npm install
+```
 
-Configure environment variables and install relevant dependencies.If you need to use a database, please use the official version of Supabase.
+### 5. Run Development Server
 
-## Learn More
+```cmd
+pnpm run dev
+```
 
-You can also check the help documentation: Download and Building the app（ [https://intl.cloud.baidu.com/en/doc/MIAODA/s/download-and-building-the-app-en](https://intl.cloud.baidu.com/en/doc/MIAODA/s/download-and-building-the-app-en)）to learn more detailed content.
+Or with npm:
+```cmd
+npm run dev
+```
+
+The application will start at `http://localhost:5173`
+
+### 6. Build for Production
+
+```cmd
+pnpm run build
+```
+
+Or with npm:
+```cmd
+npm run build
+```
+
+## Default Admin Account
+
+For testing purposes, a default admin account is created:
+
+- **Email**: admin@spa.com
+- **Password**: admin123
+
+You can also create a new account - the first registered user will automatically become an admin.
+
+## Application Structure
+
+```
+app-acdi0cpanz7l/
+├── src/
+│   ├── components/
+│   │   ├── admin/          # Admin dashboard components
+│   │   ├── booking/        # Multi-step booking wizard
+│   │   ├── common/         # Shared components
+│   │   ├── spa/            # Landing page components
+│   │   └── ui/             # shadcn/ui components
+│   ├── contexts/           # React Context (Auth)
+│   ├── data/               # Sample data
+│   ├── pages/              # Page components
+│   ├── services/           # Business logic & data services
+│   ├── types/              # TypeScript type definitions
+│   └── App.tsx             # Main application component
+├── public/                 # Static assets
+└── package.json            # Dependencies and scripts
+```
+
+## Available Scripts
+
+- `pnpm run dev` - Start development server
+- `pnpm run build` - Build for production
+- `pnpm run preview` - Preview production build
+- `pnpm run lint` - Run linter
+
+## User Guide
+
+### For Customers
+
+1. **Register/Login**: Create an account or sign in
+2. **Select City**: Search for your city
+3. **Choose Salon**: Browse salons in your city
+4. **Pick Service**: Select from available services
+5. **Book Slot**: Choose date and time
+6. **Confirm**: Review and confirm booking
+7. **Manage**: View your bookings in "My Bookings"
+
+### For Admins
+
+1. **Login**: Use admin credentials at `/admin-login`
+2. **Dashboard**: View all bookings across all cities
+3. **Filter**: Search and filter by city, user, salon, or service
+4. **Manage**: Delete bookings as needed
+
+## Email Configuration
+
+The application includes email notification functionality. To enable real email sending:
+
+### Option 1: EmailJS (Recommended for Frontend)
+
+1. Sign up at [emailjs.com](https://www.emailjs.com/)
+2. Create an email service
+3. Create an email template
+4. Get your Service ID, Template ID, and Public Key
+5. Update the email service configuration (see Email Integration section below)
+
+### Option 2: Backend Integration
+
+For production use, integrate with a backend service:
+- Node.js + Nodemailer
+- Python Flask + SMTP
+- SendGrid API
+- AWS SES
+- Mailgun
+
+## Sample Data
+
+The application includes sample data for:
+- 8 cities (Chennai, Coimbatore, Bangalore, Mumbai, Delhi, Hyderabad, Pune, Kolkata)
+- 20 salons across all cities
+- 78 services with pricing and durations
+
+## Security Notes
+
+⚠️ **Important**: This is a demo application using localStorage for data persistence and client-side password hashing. For production use:
+
+1. Implement proper backend authentication (JWT, OAuth)
+2. Use server-side password hashing (bcrypt, argon2)
+3. Store data in a real database (PostgreSQL, MongoDB)
+4. Implement HTTPS
+5. Add rate limiting and CSRF protection
+6. Use environment variables for sensitive data
+
+## Troubleshooting
+
+### Port Already in Use
+
+If port 5173 is already in use:
+```cmd
+# Kill the process using the port (Windows)
+netstat -ano | findstr :5173
+taskkill /PID <PID> /F
+```
+
+### Module Not Found Errors
+
+Clear cache and reinstall:
+```cmd
+rmdir /s /q node_modules
+del package-lock.json
+pnpm install
+```
+
+### Build Errors
+
+Clear build cache:
+```cmd
+rmdir /s /q dist
+pnpm run build
+```
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## License
+
+This project is for educational and demonstration purposes.
+
+## Support
+
+For issues or questions, please check the documentation or create an issue in the project repository.

@@ -6,6 +6,9 @@ import SalonList from './SalonList';
 import ServiceSelector from './ServiceSelector';
 import BookingDetailsForm from './BookingDetailsForm';
 import { createAppointment } from '@/services/appointmentService';
+import { sendBookingConfirmationEmail } from '@/services/emailService';
+import { getSalonById } from '@/services/salonService';
+import { getServiceById } from '@/services/serviceService';
 import type { City, Salon, Service, BookingFormData } from '@/types/index';
 
 const BookingWizard: React.FC = () => {
@@ -52,8 +55,34 @@ const BookingWizard: React.FC = () => {
 
       const result = createAppointment(bookingData);
 
-      if (result.success) {
-        toast.success(result.message, { duration: 5000 });
+      if (result.success && result.appointment) {
+        // Send email notification
+        const salon = getSalonById(selectedSalon.id);
+        const service = getServiceById(selectedService.id);
+        
+        if (salon && service) {
+          const emailResult = await sendBookingConfirmationEmail({
+            userName: result.appointment.userName,
+            userEmail: result.appointment.userEmail,
+            cityName: selectedCity.name,
+            salonName: salon.name,
+            salonLocation: salon.location,
+            serviceName: service.serviceName,
+            servicePrice: service.price,
+            date: data.date,
+            time: data.time
+          });
+
+          if (emailResult.success) {
+            toast.success(result.message, { duration: 5000 });
+            toast.info(emailResult.message, { duration: 4000 });
+          } else {
+            toast.success(result.message, { duration: 5000 });
+            toast.warning('Booking confirmed, but email notification failed', { duration: 3000 });
+          }
+        } else {
+          toast.success(result.message, { duration: 5000 });
+        }
         
         // Reset wizard
         setTimeout(() => {

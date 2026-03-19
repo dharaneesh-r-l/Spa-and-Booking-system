@@ -147,6 +147,7 @@ A full-stack web application for global salon and spa appointment booking with p
 
 #### 2.3.3 Email Notification
 - Send confirmation email via SMTP (Gmail) after successful booking
+- Email integration triggered only after booking completion
 - Email content includes:
   - User name
   - City
@@ -232,6 +233,8 @@ A full-stack web application for global salon and spa appointment booking with p
 - Clear separation between frontend and backend code
 - Secure password handling
 - Proper session management
+- Windows CMD friendly execution
+- Code must run on local machine without deployment requirements
 
 ### 3.5 Security Requirements
 - Use password hashing (generate_password_hash, check_password_hash)
@@ -247,17 +250,22 @@ A full-stack web application for global salon and spa appointment booking with p
 - Configure SMTP email settings
 - Initialize database with users table
 - Create admin account with hashed password
-- Server startup instructions
+- Server startup instructions for Windows CMD
+- Run application using: python app.py
+- Application must be executable via Windows Command Prompt
 
 ### 4.2 Deliverables
 - Complete working code for all files
 - Authentication system fully integrated
 - Error-free application execution
 - Setup documentation
+- Windows CMD compatible startup script
 
 ## 5. Other Requirements
-- Application must run without errors
+- Application must run without errors on Windows local machine
 - All features must be fully functional
 - Code should be well-organized and documented
 - Authentication system must be secure
 - Application should behave like a mini version of a global salon booking platform where users can register, login, book any salon from any city, and view their bookings
+- Email integration must trigger only after booking is completed
+- Application must be Windows CMD friendly for local execution
